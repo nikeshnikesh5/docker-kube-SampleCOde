@@ -3,7 +3,7 @@ pipeline {
 
     environment {
      DOCKER_IMAGE = "techhunt/mynodeapp"
-        TAG = "latest"
+        TAG = "0.0.1"
     }
 
     stages {
