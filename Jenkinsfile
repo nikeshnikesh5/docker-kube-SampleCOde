@@ -38,12 +38,15 @@ pipeline {
             }
         }
 
- stage('Deploy to Kubernetes') {
+stage('Deploy to Kubernetes') {
     steps {
-        sh """
-        ssh -o StrictHostKeyChecking=no root@192.168.122.158 \
-        "kubectl set image deployment/mynode-deployment mynode-container=${DOCKER_IMAGE}:${TAG}"
-        """
+        // Wrap your command in sshagent if you stored your key in Jenkins Credentials
+        sshagent(['k8s-ssh-key-id']) { 
+            sh """
+            ssh -o StrictHostKeyChecking=no root@192.168.122.158 \
+            "kubectl set image deployment/mynode-deployment mynode-container=${DOCKER_IMAGE}:${TAG}"
+            """
+        }
     }
 }
 }
