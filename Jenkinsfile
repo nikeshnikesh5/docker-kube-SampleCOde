@@ -40,11 +40,18 @@ pipeline {
 
 stage('Deploy to Kubernetes') {
     steps {
-        // Wrap your command in sshagent if you stored your key in Jenkins Credentials
         sshagent(['k8s-ssh-key-id']) { 
             sh """
-            ssh -o StrictHostKeyChecking=no root@192.168.122.158 \
-            "kubectl set image deployment/mynode-deployment mynode-container=${DOCKER_IMAGE}:${TAG}"
+            ssh -o StrictHostKeyChecking=no root@192.168.122.158 "
+                if ! kubectl get deployment mynode-deployment > /dev/null 2>&1; then
+                    echo 'Deployment not found. Creating new deployment...'
+                    kubectl create deployment mynode-deployment --image=${DOCKER_IMAGE}:${TAG}
+                    kubectl expose deployment mynode-deployment --type=NodePort --port=8080
+                else
+                    echo 'Deployment exists. Updating image...'
+                    kubectl set image deployment/mynode-deployment mynode-container=${DOCKER_IMAGE}:${TAG}
+                fi
+            "
             """
         }
     }
