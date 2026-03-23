@@ -39,12 +39,14 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                sh '''
-                kubectl apply -f k8s-app.yaml
-                '''
-            }
-        }
-
+    steps {
+        sh '''
+        ssh root@192.168.122.158"
+        kubectl set image deployment/mynode-deployment \
+        mynode-container=$DOCKER_IMAGE:$TAG
+        "
+        '''
+    }
+}
     }
 }
