@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "https://hub.docker.com/u/techhunt/mynodeapp"
+     DOCKER_IMAGE = "techhunt/mynodeapp"
         TAG = "latest"
     }
 
