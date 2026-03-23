@@ -38,11 +38,11 @@ pipeline {
             }
         }
 
-  stage('Deploy to Kubernetes') {
+ stage('Deploy to Kubernetes') {
     steps {
         sh """
-        ssh root@192.168.122.158 "kubectl set image deployment/mynode-deployment \
-        mynode-container=$DOCKER_IMAGE:$TAG"
+        ssh -o StrictHostKeyChecking=no root@192.168.122.158 \
+        "kubectl set image deployment/mynode-deployment mynode-container=${DOCKER_IMAGE}:${TAG}"
         """
     }
 }
